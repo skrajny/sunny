@@ -1,21 +1,19 @@
 package com.example.android.sunshine.app;
 
+import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.example.android.sunshine.app.R;
+import org.json.JSONException;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +23,8 @@ import java.util.List;
  * A placeholder fragment containing a simple view.
  */
 public class ForecastFragment extends Fragment {
-    protected ArrayAdapter<String> mForecastAdapter;
+    public ArrayAdapter<String> mForecastAdapter;
+
     public ForecastFragment() {
     }
 
@@ -59,5 +58,50 @@ public class ForecastFragment extends Fragment {
         ListView myListView = (ListView) rootView.findViewById(R.id.listview_forecast);
         myListView.setAdapter(mForecastAdapter);
         return rootView;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_refresh) {
+            new RetrieveFeedTask().execute("94043");
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private class RetrieveFeedTask extends AsyncTask<String, String, String[]> {
+        @Override
+        protected String[] doInBackground(String... params) {
+
+            String format = "json";
+            String units = "metric";
+            int numDays = 7;
+            try {
+                String zipCode = params[0];
+                Uri.Builder builder = new Uri.Builder();
+                builder.scheme("http")
+                        .authority("api.openweathermap.org")
+                        .appendPath("data")
+                        .appendPath("2.5")
+                        .appendPath("forecast")
+                        .appendPath("daily")
+                        .appendQueryParameter("q", zipCode)
+                        .appendQueryParameter("mode", format)
+                        .appendQueryParameter("units", units)
+                        .appendQueryParameter("cnt", Integer.toString(numDays));
+
+                URL url = new URL(builder.toString());
+                String weatherJson = new WeatherReceiver().getWeatherJson(url);
+
+                WeatherDataParser parser = new WeatherDataParser();
+                String[] weatherDataFromJson = parser.getWeatherDataFromJson(weatherJson, numDays);
+                return weatherDataFromJson;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                //e.printStackTrace();
+            }
+            return null;
+        }
     }
 }

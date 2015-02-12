@@ -11,25 +11,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-/**
- * Created by daniel.farbiszewski on 2015-02-06.
- */
-public class RetriveFeedTask extends AsyncTask {
-    @Override
-    protected Object doInBackground(Object[] params) {
-        try {
-            URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7"
-            );
-            String weatherJson = getWeatherJson(url);
-            return weatherJson;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-
-        }
-        return null;
-    }
-
-    private String getWeatherJson(URL url) {
+class WeatherReceiver {
+    public String getWeatherJson(URL url) {
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
         HttpURLConnection urlConnection = null;
@@ -83,6 +66,7 @@ public class RetriveFeedTask extends AsyncTask {
                 }
             }
         }
+        Log.v("feed", forecastJsonStr);
         return forecastJsonStr;
     }
 }
