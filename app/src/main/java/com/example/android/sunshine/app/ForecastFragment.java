@@ -91,14 +91,24 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            String location = preferences.getString(
-                    getString(R.string.pref_location_key),
-                    getString(R.string.pref_location_default)
-            );
-            retriever = new RetrieveFeedTask();
-            retriever.execute(location);
+            refreshLocation();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        refreshLocation();
+        super.onStart();
+    }
+
+    private void refreshLocation() {
+        String location = preferences.getString(
+                getString(R.string.pref_location_key),
+                getString(R.string.pref_location_default)
+        );
+        retriever = new RetrieveFeedTask();
+        retriever.execute(location);
     }
 
     private class RetrieveFeedTask extends AsyncTask<String, String, String[]> {
