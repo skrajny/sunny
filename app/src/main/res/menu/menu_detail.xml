@@ -4,5 +4,4 @@
     tools:context="com.example.android.sunshine.app.DetailActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" app:showAsAction="never" />
-    <item android:id="@+id/action_show_map" android:title="@string/show_map" app:showAsAction="never"/>
 </menu>

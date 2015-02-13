@@ -51,21 +51,6 @@ public class DetailActivity extends ActionBarActivity {
             return true;
         }
 
-        if (id == R.id.action_show_map) {
-            //Intent mapIntent = new Intent(this, )
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            String location = preferences.getString(
-                    getString(R.string.pref_location_key),
-                    getString(R.string.pref_location_default)
-            );
-            Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
-                    Uri.parse("https://www.google.com/maps/place/"+location));
-            //if (isAppInstalled("com.google.android.apps.maps")) {
-                intent.setClassName("com.google.android.apps.maps", "com.google.android.maps.MapsActivity");
-            //}
-            startActivity(intent);
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
