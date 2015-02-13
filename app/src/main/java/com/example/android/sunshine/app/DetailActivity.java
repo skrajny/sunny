@@ -27,7 +27,6 @@ public class DetailActivity extends ActionBarActivity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -44,11 +43,14 @@ public class DetailActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent detailIntent = new Intent(this, SettingsActivity.class);
+            startActivity(detailIntent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     /**
      * A placeholder fragment containing a simple view.
@@ -63,9 +65,11 @@ public class DetailActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
             Intent intent = getActivity().getIntent();
-            String message = intent.getStringExtra(Intent.EXTRA_TEXT);
-            TextView detailText = (TextView) rootView.findViewById(R.id.detail_text);
-            detailText.setText(message);
+            if (intent != null) {
+                String message = intent.getStringExtra(Intent.EXTRA_TEXT);
+                TextView detailText = (TextView) rootView.findViewById(R.id.detail_text);
+                detailText.setText(message);
+            }
             return rootView;
         }
     }

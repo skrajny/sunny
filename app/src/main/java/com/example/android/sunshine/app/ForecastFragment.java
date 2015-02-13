@@ -2,9 +2,11 @@ package com.example.android.sunshine.app;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,26 +17,20 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class ForecastFragment extends Fragment {
     private ArrayAdapter<String> mForecastAdapter;
     private RetrieveFeedTask retriever;
-    public ForecastFragment() {
-    }
+    private SharedPreferences preferences;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(this.getActivity());
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
@@ -51,25 +47,25 @@ public class ForecastFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-        String[] forecastArray = {
-                "Today - Sunny 88/63",
-                "5 - Sunny 88/63",
-                "6 - Sunny 88/63",
-                "7 - Sunny 88/63",
-                "8 - Sunny 88/63",
-                "9 - Sunny 88/63",
-                "10 - Sunny 88/63"
-        };
-        //getWeatherJson();
-
-
-        List<String> weekForecast = new ArrayList(Arrays.asList(forecastArray));
+//        String[] forecastArray = {
+//                "Today - Sunny 88/63",
+//                "5 - Sunny 88/63",
+//                "6 - Sunny 88/63",
+//                "7 - Sunny 88/63",
+//                "8 - Sunny 88/63",
+//                "9 - Sunny 88/63",
+//                "10 - Sunny 88/63"
+//        };
+//        //getWeatherJson();
+//
+//
+//        List<String> weekForecast = new ArrayList(Arrays.asList(forecastArray));
 
         mForecastAdapter = new ArrayAdapter<String>(
                 getActivity(),
                 R.layout.list_item_forecast,
                 R.id.list_item_forecast_textview,
-                weekForecast
+                new ArrayList()
         );
 
 
@@ -95,8 +91,12 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
+            String location = preferences.getString(
+                    getString(R.string.pref_location_key),
+                    getString(R.string.pref_location_default)
+            );
             retriever = new RetrieveFeedTask();
-            retriever.execute("94043");
+            retriever.execute(location);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -106,7 +106,11 @@ public class ForecastFragment extends Fragment {
         protected String[] doInBackground(String... params) {
 
             String format = "json";
-            String units = "metric";
+            String units = preferences.getString(
+                    getString(R.string.pref_units_key),
+                    getString(R.string.pref_units_default)
+            );
+
             int numDays = 7;
             try {
                 String zipCode = params[0];
