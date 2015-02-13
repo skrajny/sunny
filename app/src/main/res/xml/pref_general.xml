@@ -10,9 +10,9 @@
         android:maxLines="1" />
 
     <ListPreference
-        android:key="PREF_METRICS"
+        android:key="@string/pref_units_key"
         android:title="Metrics"
-        android:defaultValue=""
+        android:defaultValue="@string/pref_units_default"
         android:entries="@array/pref_units_list_titles"
         android:entryValues="@array/pref_units_list_values"
         android:negativeButtonText="@null"
