@@ -2,7 +2,9 @@ package com.example.android.sunshine.app;
 
 import android.support.v4.app.Fragment;
 import android.content.Intent;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.ShareActionProvider;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -12,7 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ShareActionProvider;
+//import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
 
@@ -83,13 +85,13 @@ public class DetailActivity extends ActionBarActivity {
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
             inflater.inflate(R.menu.detail_fragment, menu);
             MenuItem menuItem = menu.findItem(R.id.action_share);
-//            ShareActionProvider mShareActionProvider =
-//                    (ShareActionProvider) menuItem.getActionProvider();
-//            if (mShareActionProvider != null) {
-//                mShareActionProvider.setShareIntent(createShareForecastIntent());
-//            } else {
-//                Log.d(LOG_TAG, "Share Action provider is null?");
-//            }
+            ShareActionProvider mShareActionProvider =
+                    (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+            if (mShareActionProvider != null) {
+                mShareActionProvider.setShareIntent(createShareForecastIntent());
+            } else {
+                Log.d(LOG_TAG, "Share Action provider is null?");
+            }
         }
 
         private Intent createShareForecastIntent() {
